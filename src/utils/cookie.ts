@@ -1,3 +1,5 @@
+import { PATH } from "./constants";
+
 export const getCookie = (name: string): string => {
     const matches = document.cookie.match(
       // eslint-disable-next-line no-useless-escape
@@ -9,7 +11,7 @@ export const getCookie = (name: string): string => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   export const setCookie = (name: string, value: string, props: { [key: string]: any }): void  => {
     props = {
-      path: '/',
+      path: PATH.HOME,
       ...props,
     };
     let exp = props.expires;

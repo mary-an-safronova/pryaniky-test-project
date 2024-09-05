@@ -1,4 +1,5 @@
-const HOST = 'https://test.v5.pryaniky.com';
+import { HOST } from "./constants";
+import { getCookie } from "./cookie";
 
 const checkResponse = async (res: Response) => {
   if (res.ok) {
@@ -24,3 +25,22 @@ export const loginUser = async (username: string, password: string) => {
 
   return checkResponse(response);
 };
+
+export const getTableData = async () => {
+    const response = await fetch(`${HOST}/ru/data/v3/testmethods/docs/userdocs/get`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-auth": getCookie('accessToken').split('Bearer ')[1],
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Ошибка при получении данных');
+    }
+  
+    const data = await response.json();
+    if (data) {
+      return data;
+    }
+  };

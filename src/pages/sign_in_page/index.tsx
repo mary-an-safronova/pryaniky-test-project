@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { loginUser } from '../../utils/api';
 import { setCookie } from '../../utils/cookie';
 import { useNavigate } from "react-router-dom";
+import { PATH } from "../../utils/constants";
 
 export const SignInPage = () => {
   const [userData, setUserData] = useState({ login: "", password: "" });
@@ -39,8 +40,7 @@ export const SignInPage = () => {
    
     try {
       const response = await loginUser(userData.login, userData.password); // Отправляем данные на сервер, получаем токен
-      console.log("Токен: ", response.data.token); // Здесь можно сохранить токен или выполнить дополнительные действия
-      setCookie('accessToken', `Bearer ${response.data.token}`, { path: '/' }); // Устанавливаем токен в куки
+      setCookie('accessToken', `Bearer ${response.data.token}`, { path: PATH.HOME }); // Устанавливаем токен в куки
 
       setUserData({ login: "", password: "" }); // Устанавливаем пустые поля
       setErrors({ loginErr: false, passwordErr: false }); // Убираем сообщения об ошибках
@@ -55,7 +55,11 @@ export const SignInPage = () => {
   };
 
   return (
-    <Container component="main" maxWidth="sm">
+    <Container 
+      component="main" 
+      maxWidth="sm" 
+      sx={{ position: 'absolute', top: '50%', left: '50%', marginRight: '-50%', transform: 'translate(-50%, -50%)', }}
+    >
       <Box
         sx={{
           boxShadow: 3,

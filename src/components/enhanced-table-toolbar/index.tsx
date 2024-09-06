@@ -6,7 +6,12 @@ import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
 import { EnhancedTableToolbarProps } from "./types";
 
 export const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
-  const { numSelected, handleAddModalOpen, handleEditModalOpen } = props;
+  const {
+    numSelected,
+    handleAddModalOpen,
+    handleEditModalOpen,
+    handleDeleteModalOpen,
+  } = props;
 
   return (
     <Toolbar
@@ -63,7 +68,7 @@ export const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
       <Tooltip title="Удалить">
         <span>
           <IconButton
-            onClick={() => console.log("CLICK ON DELETE BTN")}
+            onClick={handleDeleteModalOpen}
             disabled={numSelected === 0}
           >
             <DeleteIcon color={numSelected > 0 ? "inherit" : "disabled"} />

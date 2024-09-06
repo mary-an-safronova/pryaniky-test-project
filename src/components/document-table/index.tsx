@@ -9,20 +9,23 @@ import {
   TableBody,
   Table,
 } from "@mui/material";
-import { getTableData } from "../../utils/api";
+import { deleteDocuments, getTableData } from "../../utils/api";
 import { TDataItem } from "./types";
 import {
   EnhancedTableToolbar,
   AddDocEntryForm,
   TransitionsModal,
   EditDocEntryForm,
+  Confirmation,
 } from "..";
+import { formatDate } from "../../utils/format-date";
 
 export const DocumentTable = () => {
   const [data, setData] = useState<TDataItem[]>([]);
   const [selected, setSelected] = useState<readonly string[]>([]);
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const [openEditModal, setOpenEditModal] = useState<boolean>(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
 
   // Получаем данные таблицы
   const fetchData = async () => {
@@ -58,21 +61,6 @@ export const DocumentTable = () => {
       fetchData();
     };
 
-  // Форматирование дат
-  const formatDate = (date: string) => {
-    const newDate = new Date(date);
-    const options: Intl.DateTimeFormatOptions = {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      timeZone: "UTC",
-    };
-    const formattedDate = newDate.toLocaleString("ru-RU", options);
-    return formattedDate;
-  };
-
   // Выделение всех чекбоксов одним нажатием
   const handleSelectAllClick = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
@@ -105,12 +93,29 @@ export const DocumentTable = () => {
 
   const selectedData = data?.find((item) => item.id === selected[0]);
 
+  // Удаляем выбранные записи
+  const handleDeleteDocEntries = async () => {
+    try {
+      const responses = await deleteDocuments(selected);
+      setOpenDeleteModal(false);
+      fetchData();
+      console.log(responses);
+    } catch (err) {
+      if (err instanceof Error) {
+        console.error(err.message);
+      } else {
+        console.error("Неизвестная ошибка");
+      }
+    }
+  };
+
   return (
     <>
       <EnhancedTableToolbar
         numSelected={selected.length}
         handleAddModalOpen={handleModalOpen(setOpenAddModal)}
         handleEditModalOpen={handleModalOpen(setOpenEditModal)}
+        handleDeleteModalOpen={handleModalOpen(setOpenDeleteModal)}
       />
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -202,6 +207,17 @@ export const DocumentTable = () => {
           <EditDocEntryForm
             defaultData={selectedData}
             handleClose={handleModalCloseWithFetch(setOpenEditModal)}
+          />
+        </TransitionsModal>
+      )}
+      {openDeleteModal && (
+        <TransitionsModal
+          open={openDeleteModal}
+          handleClose={handleModalClose(setOpenDeleteModal)}
+        >
+          <Confirmation
+            btnTitle="Удалить запись"
+            onClick={handleDeleteDocEntries}
           />
         </TransitionsModal>
       )}

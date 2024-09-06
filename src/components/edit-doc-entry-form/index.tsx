@@ -20,7 +20,6 @@ export const EditDocEntryForm = (props: TEditDocEntryFormProps) => {
 
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
-    console.log(entryData);
 
     try {
       const response = await updateDocumentMetadata(entryData, defaultData?.id);

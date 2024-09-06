@@ -87,3 +87,23 @@ export const updateDocumentMetadata = async (
 
   return checkResponse(response);
 };
+
+// Запрос для удаления одной или нескольких выбранных записей
+export const deleteDocuments = async (ids: readonly string[]) => {
+  const responses = await Promise.all(
+    ids.map(async (id) => {
+      const response = await fetch(
+        `${HOST}/ru/data/v3/testmethods/docs/userdocs/delete/${id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-auth": getCookie("accessToken").split("Bearer ")[1],
+          },
+        }
+      );
+      return checkResponse(response);
+    })
+  );
+  return responses; // Возвращаем массив ответов
+};

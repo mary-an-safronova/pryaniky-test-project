@@ -7,3 +7,4 @@ export { AddDocEntryForm as AddDocEntryForm } from "./add-doc-entry-form";
 export { BasicDateTimePicker as BasicDateTimePicker } from "./basic-date-time-picker";
 export { DocEntryForm as DocEntryForm } from "./doc-entry-form";
 export { EditDocEntryForm as EditDocEntryForm } from "./edit-doc-entry-form";
+export { Confirmation as Confirmation } from "./confirmation";

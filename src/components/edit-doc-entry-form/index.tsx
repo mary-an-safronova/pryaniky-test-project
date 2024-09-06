@@ -3,9 +3,11 @@ import { TEditDocEntryFormProps } from "./types";
 import { TEntryData } from "../doc-entry-form/types";
 import { DocEntryForm } from "..";
 import { updateDocumentMetadata } from "../../utils/api";
+import { useLoading } from "../../hooks/UseLoading";
 
 export const EditDocEntryForm = (props: TEditDocEntryFormProps) => {
   const { defaultData, handleClose } = props;
+  const { setLoading } = useLoading();
 
   const [entryData, setEntryData] = useState<TEntryData>({
     companySigDate: defaultData?.companySigDate,
@@ -20,7 +22,7 @@ export const EditDocEntryForm = (props: TEditDocEntryFormProps) => {
 
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
-
+    setLoading(true);
     try {
       const response = await updateDocumentMetadata(entryData, defaultData?.id);
       handleClose();
@@ -31,6 +33,8 @@ export const EditDocEntryForm = (props: TEditDocEntryFormProps) => {
       } else {
         console.error("Неизвестная ошибка");
       }
+    } finally {
+      setLoading(false); // Устанавливаем лоадер в false после запроса
     }
   };
 

@@ -3,9 +3,11 @@ import { useState } from "react";
 import { createDocumentMetadata } from "../../utils/api";
 import { TEntryData } from "../doc-entry-form/types";
 import { TAddDocEntryFormProps } from "./types";
+import { useLoading } from "../../hooks/UseLoading";
 
 export const AddDocEntryForm = (props: TAddDocEntryFormProps) => {
   const { handleClose } = props;
+  const { setLoading } = useLoading();
 
   const [newEntryData, setNewEntryData] = useState<TEntryData>({
     companySigDate: new Date().toISOString(), // Устанавливаем текущее время по умолчанию
@@ -20,7 +22,7 @@ export const AddDocEntryForm = (props: TAddDocEntryFormProps) => {
 
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
-
+    setLoading(true);
     try {
       const response = await createDocumentMetadata(newEntryData);
 
@@ -42,6 +44,8 @@ export const AddDocEntryForm = (props: TAddDocEntryFormProps) => {
       } else {
         console.error("Неизвестная ошибка");
       }
+    } finally {
+      setLoading(false);
     }
   };
 

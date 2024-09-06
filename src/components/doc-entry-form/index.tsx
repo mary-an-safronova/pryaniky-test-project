@@ -1,9 +1,12 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, TextField, Typography } from "@mui/material";
 import { BasicDateTimePicker } from "..";
 import { TDocEntryFormProps } from "./types";
+import { LoadingButton } from "@mui/lab";
+import { useLoading } from "../../hooks/UseLoading";
 
 export const DocEntryForm = (props: TDocEntryFormProps) => {
   const { formTitle, btnTitle, arr, setArr, handleSubmit } = props;
+  const { loading } = useLoading();
 
   // Функция для обновления полей ввода
   const onChangeInput = (e: { target: { name: string; value: string } }) => {
@@ -104,16 +107,18 @@ export const DocEntryForm = (props: TDocEntryFormProps) => {
         value={arr.employeeSignatureName}
         onChange={onChangeInput}
       />
-      <Button
+      <LoadingButton
         type="submit"
         fullWidth
         variant="contained"
         color="primary"
         sx={{ mt: 3, mb: 2 }}
         disabled={!arr.companySignatureName || !arr.documentName}
+        loadingPosition="center"
+        loading={loading}
       >
         {btnTitle}
-      </Button>
+      </LoadingButton>
     </Box>
   );
 };

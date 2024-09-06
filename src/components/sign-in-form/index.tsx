@@ -1,17 +1,20 @@
-import { Box, Button, Container, TextField, Typography } from "@mui/material";
+import { Box, Container, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { loginUser } from '../../utils/api';
-import { setCookie } from '../../utils/cookie';
+import { loginUser } from "../../utils/api";
+import { setCookie } from "../../utils/cookie";
 import { useNavigate } from "react-router-dom";
 import { PATH } from "../../utils/constants";
+import { useLoading } from "../../hooks/UseLoading";
+import { LoadingButton } from "@mui/lab";
 
 export const SignInForm = () => {
   const [userData, setUserData] = useState({ login: "", password: "" });
   const [errors, setErrors] = useState({ loginErr: false, passwordErr: false });
+  const { loading, setLoading } = useLoading();
 
   const navigate = useNavigate();
 
-  const onChangeInput = (e: { target: { name: string; value: string; } }) => {
+  const onChangeInput = (e: { target: { name: string; value: string } }) => {
     setUserData({
       ...userData,
       [e.target.name]: e.target.value,
@@ -37,28 +40,38 @@ export const SignInForm = () => {
 
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
-   
+    setLoading(true);
     try {
       const response = await loginUser(userData.login, userData.password); // Отправляем данные на сервер, получаем токен
-      setCookie('accessToken', `Bearer ${response.data.token}`, { path: PATH.HOME }); // Устанавливаем токен в куки
+      setCookie("accessToken", `Bearer ${response.data.token}`, {
+        path: PATH.HOME,
+      }); // Устанавливаем токен в куки
 
       setUserData({ login: "", password: "" }); // Устанавливаем пустые поля
       setErrors({ loginErr: false, passwordErr: false }); // Убираем сообщения об ошибках
       navigate("/", { replace: true });
     } catch (err) {
-        if (err instanceof Error) {
-          console.error(err.message);
-        } else {
-          console.error("Неизвестная ошибка");
-        }
+      if (err instanceof Error) {
+        console.error(err.message);
+      } else {
+        console.error("Неизвестная ошибка");
+      }
+    } finally {
+      setLoading(false); // Устанавливаем лоадер в false после запроса
     }
   };
 
   return (
-    <Container 
-      component="main" 
-      maxWidth="sm" 
-      sx={{ position: 'absolute', top: '50%', left: '50%', marginRight: '-50%', transform: 'translate(-50%, -50%)', }}
+    <Container
+      component="main"
+      maxWidth="sm"
+      sx={{
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        marginRight: "-50%",
+        transform: "translate(-50%, -50%)",
+      }}
     >
       <Box
         sx={{
@@ -106,18 +119,24 @@ export const SignInForm = () => {
             autoComplete="current-password"
             value={userData.password}
             onChange={onChangeInput}
-            helperText={ errors.passwordErr ? "Поле обязательно" : "Пожалуйста, введите пароль" }
+            helperText={
+              errors.passwordErr
+                ? "Поле обязательно"
+                : "Пожалуйста, введите пароль"
+            }
           />
-          <Button
+          <LoadingButton
             type="submit"
             fullWidth
             variant="contained"
             color="primary"
             sx={{ mt: 3, mb: 2 }}
             disabled={!userData.login || !userData.password}
+            loadingPosition="center"
+            loading={loading}
           >
             Войти
-          </Button>
+          </LoadingButton>
         </Box>
       </Box>
     </Container>

@@ -1,4 +1,5 @@
 export interface EnhancedTableToolbarProps {
   numSelected: number;
-  handleOpen: () => void;
+  handleAddModalOpen: () => void;
+  handleEditModalOpen: () => void;
 }

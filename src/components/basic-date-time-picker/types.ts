@@ -1,5 +1,5 @@
 export type TBasicDateTimePickerProps = {
   label: string;
-  date: string;
+  date?: string;
   onDateChange: (date: string) => void;
 };

@@ -11,12 +11,18 @@ import {
 } from "@mui/material";
 import { getTableData } from "../../utils/api";
 import { TDataItem } from "./types";
-import { EnhancedTableToolbar, AddDocEntryForm, TransitionsModal } from "..";
+import {
+  EnhancedTableToolbar,
+  AddDocEntryForm,
+  TransitionsModal,
+  EditDocEntryForm,
+} from "..";
 
 export const DocumentTable = () => {
   const [data, setData] = useState<TDataItem[]>([]);
   const [selected, setSelected] = useState<readonly string[]>([]);
-  const [open, setOpen] = useState<boolean>(false);
+  const [openAddModal, setOpenAddModal] = useState<boolean>(false);
+  const [openEditModal, setOpenEditModal] = useState<boolean>(false);
 
   // Получаем данные таблицы
   const fetchData = async () => {
@@ -37,15 +43,20 @@ export const DocumentTable = () => {
     fetchData();
   }, []);
 
-  // Открытие, закрытие модального окна
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  // Функция для открытия модальных окон
+  const handleModalOpen = (setModalOpen: (arg0: boolean) => void) => () =>
+    setModalOpen(true);
+
+  // Функция для закрытия модальных окон
+  const handleModalClose = (setModalOpen: (arg0: boolean) => void) => () =>
+    setModalOpen(false);
 
   // Закрытие модального окна с обновлением данных таблицы
-  const handleCloseWithFetch = () => {
-    setOpen(false);
-    fetchData();
-  };
+  const handleModalCloseWithFetch =
+    (setModalOpen: (arg0: boolean) => void) => () => {
+      setModalOpen(false);
+      fetchData();
+    };
 
   // Форматирование дат
   const formatDate = (date: string) => {
@@ -78,17 +89,13 @@ export const DocumentTable = () => {
     let newSelected: readonly string[] = [];
 
     if (selectedIndex === -1) {
+      // Если чекбокс был отмечен добавляем id выбранного элемента в массив
       newSelected = newSelected.concat(selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
+    } else {
+      // Если чекбокс был снят убираем id выбранного элемента в массив
+      newSelected = selected.filter((item) => item !== id);
     }
+
     setSelected(newSelected);
   };
 
@@ -96,11 +103,14 @@ export const DocumentTable = () => {
   const numSelected = selected.length;
   const rowCount = data.length;
 
+  const selectedData = data?.find((item) => item.id === selected[0]);
+
   return (
     <>
       <EnhancedTableToolbar
         numSelected={selected.length}
-        handleOpen={handleOpen}
+        handleAddModalOpen={handleModalOpen(setOpenAddModal)}
+        handleEditModalOpen={handleModalOpen(setOpenEditModal)}
       />
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -174,9 +184,25 @@ export const DocumentTable = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      {open && (
-        <TransitionsModal open={open} handleClose={handleClose}>
-          <AddDocEntryForm handleClose={handleCloseWithFetch} />
+      {openAddModal && (
+        <TransitionsModal
+          open={openAddModal}
+          handleClose={handleModalClose(setOpenAddModal)}
+        >
+          <AddDocEntryForm
+            handleClose={handleModalCloseWithFetch(setOpenAddModal)}
+          />
+        </TransitionsModal>
+      )}
+      {openEditModal && (
+        <TransitionsModal
+          open={openEditModal}
+          handleClose={handleModalClose(setOpenEditModal)}
+        >
+          <EditDocEntryForm
+            defaultData={selectedData}
+            handleClose={handleModalCloseWithFetch(setOpenEditModal)}
+          />
         </TransitionsModal>
       )}
     </>

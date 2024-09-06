@@ -22,7 +22,7 @@ export const AddDocEntryForm = (props: TAddDocEntryFormProps) => {
     event.preventDefault();
 
     try {
-      const response = await createDocumentMetadata(newEntryData); // Отправляем данные на сервер, получаем токен
+      const response = await createDocumentMetadata(newEntryData);
 
       setNewEntryData({
         companySigDate: new Date().toISOString(),

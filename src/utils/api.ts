@@ -67,3 +67,23 @@ export const createDocumentMetadata = async (metadata: TEntryData) => {
 
   return checkResponse(response);
 };
+
+// Запрос для изменения записи
+export const updateDocumentMetadata = async (
+  metadata: TEntryData,
+  id: string | undefined
+) => {
+  const response = await fetch(
+    `${HOST}/ru/data/v3/testmethods/docs/userdocs/set/${id}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-auth": getCookie("accessToken").split("Bearer ")[1],
+      },
+      body: JSON.stringify(metadata),
+    }
+  );
+
+  return checkResponse(response);
+};

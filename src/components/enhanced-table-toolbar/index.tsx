@@ -6,7 +6,8 @@ import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
 import { EnhancedTableToolbarProps } from "./types";
 
 export const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
-  const { numSelected } = props;
+  const { numSelected, handleOpen } = props;
+
   return (
     <Toolbar
       sx={[
@@ -42,17 +43,14 @@ export const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
           Документы
         </Typography>
       )}
-      <Tooltip title="Edit">
+      <Tooltip title="Добавить">
         <span>
-          <IconButton
-            onClick={() => console.log("CLICK ON ADD BTN")}
-            disabled={numSelected > 0}
-          >
+          <IconButton onClick={handleOpen} disabled={numSelected > 0}>
             <LibraryAddIcon color={numSelected < 1 ? "inherit" : "disabled"} />
           </IconButton>
         </span>
       </Tooltip>
-      <Tooltip title="Edit">
+      <Tooltip title="Изменить">
         <span>
           <IconButton
             onClick={() => console.log("CLICK ON EDIT BTN")}
@@ -62,7 +60,7 @@ export const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
           </IconButton>
         </span>
       </Tooltip>
-      <Tooltip title="Delete">
+      <Tooltip title="Удалить">
         <span>
           <IconButton
             onClick={() => console.log("CLICK ON DELETE BTN")}

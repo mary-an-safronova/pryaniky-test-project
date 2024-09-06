@@ -11,11 +11,12 @@ import {
 } from "@mui/material";
 import { getTableData } from "../../utils/api";
 import { TDataItem } from "./types";
-import { EnhancedTableToolbar } from "..";
+import { EnhancedTableToolbar, AddDocEntryForm, TransitionsModal } from "..";
 
 export const DocumentTable = () => {
   const [data, setData] = useState<TDataItem[]>([]);
   const [selected, setSelected] = useState<readonly string[]>([]);
+  const [open, setOpen] = useState<boolean>(false);
 
   // Получаем данные таблицы
   const fetchData = async () => {
@@ -36,6 +37,16 @@ export const DocumentTable = () => {
     fetchData();
   }, []);
 
+  // Открытие, закрытие модального окна
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  // Закрытие модального окна с обновлением данных таблицы
+  const handleCloseWithFetch = () => {
+    setOpen(false);
+    fetchData();
+  };
+
   // Форматирование дат
   const formatDate = (date: string) => {
     const newDate = new Date(date);
@@ -51,6 +62,7 @@ export const DocumentTable = () => {
     return formattedDate;
   };
 
+  // Выделение всех чекбоксов одним нажатием
   const handleSelectAllClick = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
       const newSelected = data.map((n) => n.id);
@@ -60,6 +72,7 @@ export const DocumentTable = () => {
     setSelected([]);
   };
 
+  // Клик на чекбокс
   const handleSelectClick = (_event: React.MouseEvent<unknown>, id: string) => {
     const selectedIndex = selected.indexOf(id);
     let newSelected: readonly string[] = [];
@@ -85,7 +98,10 @@ export const DocumentTable = () => {
 
   return (
     <>
-      <EnhancedTableToolbar numSelected={selected.length} />
+      <EnhancedTableToolbar
+        numSelected={selected.length}
+        handleOpen={handleOpen}
+      />
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -158,6 +174,11 @@ export const DocumentTable = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      {open && (
+        <TransitionsModal open={open} handleClose={handleClose}>
+          <AddDocEntryForm handleClose={handleCloseWithFetch} />
+        </TransitionsModal>
+      )}
     </>
   );
 };

@@ -1,4 +1,4 @@
-import { Box, Container, TextField, Typography } from "@mui/material";
+import { Container, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { loginUser } from "../../utils/api";
 import { setCookie } from "../../utils/cookie";
@@ -73,7 +73,7 @@ export const SignInForm = () => {
         transform: "translate(-50%, -50%)",
       }}
     >
-      <Box
+      <Container
         sx={{
           boxShadow: 3,
           borderRadius: 1,
@@ -87,7 +87,7 @@ export const SignInForm = () => {
         <Typography component="h1" variant="h4">
           Вход
         </Typography>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+        <Container component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
             color={errors.loginErr ? "error" : "primary"}
             variant="standard"
@@ -137,8 +137,8 @@ export const SignInForm = () => {
           >
             Войти
           </LoadingButton>
-        </Box>
-      </Box>
+        </Container>
+      </Container>
     </Container>
   );
 };

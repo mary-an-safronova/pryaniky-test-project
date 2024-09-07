@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { HashRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import { MainPage, SignInPage } from "./pages";
 import { ProtectedRouteElement } from "./components";
@@ -8,7 +8,7 @@ import { LoadingProvider } from "./services/LoadingProvider";
 function App() {
   return (
     <LoadingProvider>
-      <BrowserRouter>
+      <HashRouter>
         <Routes>
           <Route path={PATH.SIGNIN} element={<SignInPage />} />
           <Route
@@ -16,7 +16,7 @@ function App() {
             element={<ProtectedRouteElement element={<MainPage />} />}
           />
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </LoadingProvider>
   );
 }

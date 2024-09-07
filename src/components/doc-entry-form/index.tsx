@@ -1,4 +1,4 @@
-import { Box, TextField, Typography } from "@mui/material";
+import { Container, TextField, Typography } from "@mui/material";
 import { BasicDateTimePicker } from "..";
 import { TDocEntryFormProps } from "./types";
 import { LoadingButton } from "@mui/lab";
@@ -25,7 +25,7 @@ export const DocEntryForm = (props: TDocEntryFormProps) => {
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+    <Container component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
       <Typography variant="h6" component="h2" sx={{ mb: 1 }}>
         {formTitle}
       </Typography>
@@ -119,6 +119,6 @@ export const DocEntryForm = (props: TDocEntryFormProps) => {
       >
         {btnTitle}
       </LoadingButton>
-    </Box>
+    </Container>
   );
 };

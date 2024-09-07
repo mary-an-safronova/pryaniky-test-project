@@ -1,4 +1,4 @@
-import { Box, Backdrop, Modal, Fade } from "@mui/material";
+import { Backdrop, Modal, Fade, Container } from "@mui/material";
 import { style } from "./styles";
 import { TTransitionsModalProps } from "./types";
 
@@ -19,7 +19,7 @@ export const TransitionsModal = (props: TTransitionsModalProps) => {
         }}
       >
         <Fade in={open}>
-          <Box sx={style}>{children}</Box>
+          <Container sx={style}>{children}</Container>
         </Fade>
       </Modal>
     </div>
